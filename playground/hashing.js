@@ -4,20 +4,41 @@ const {SHA256} = require('crypto-js');
 // npm i jsonwebtoken --save
 const jwt = require ('jsonwebtoken');
 
-// two methods from jsonwebtoken
+// npm i bcryptjs -- save (for salt)
+const bcrypt = require('bcryptjs');
 
-const data = {
-  id: 10
-}
-// sending token by adding salt '123abc'
-const token = jwt.sign(data, '123abc')
+const paswsword = '123abc!';
 
-// verify
-const decoded = jwt.verify(token, '123abc')
+// first argument # of round to salt password
+bcrypt.genSalt(10, (err, salt)=>{
+  // first, thing to hash
+  // second, salt is to use
+  // hash = hash value
+  bcrypt.hash(password, salt, (err,hash)=>{
+    console.log()
+  })
+})
 
+const hashedPassword = "";
+
+// compared password to hashed password and res (response)
+//  if it's true or not
+bcrypt.compare(password, hashedPassword, (err, res)=>{
+  console.log(res)
+})
 
 // ----------- examples (using SHA256) ---------------
 if(false){
+  
+  // two methods from jsonwebtoken
+  const data = {
+    id: 10
+  }
+  // sending token by adding salt '123abc'
+  const token = jwt.sign(data, '123abc')
+  
+  // verify
+  const decoded = jwt.verify(token, '123abc')
 
   const message = "I am user number 3";
   // SHA(message) give hashing object, toString convert to string

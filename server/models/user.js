@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const jwt = require('jsonwebtoken');
 const _ = require('lodash');
+const bcrypt = require('bcryptjs');
 
 // define new schema
 const UserSchema = new mongoose.Schema( {
@@ -42,6 +43,7 @@ const UserSchema = new mongoose.Schema( {
 // don't need to call it in server.js, automatically calls
 UserSchema.methods.toJSON = function(){
   // 'this' object constructor
+  // instance method
   const user = this;
   // .toObject take mongoose variable 'user' and convert to regular object
   const userObject = user.toObject();
@@ -71,6 +73,7 @@ UserSchema.methods.generateAuthToken = function (){
 }
 
 UserSchema.statics.findByToken = function (token) {
+  // model method with this binding 
   const User = this;
   var decoded;
 
@@ -86,11 +89,28 @@ UserSchema.statics.findByToken = function (token) {
 
   return User.findOne({
     '_id': decoded._id,
-    // nested
+    // query the nested value with ''
     'tokens.token': token,
     'tokens.access': 'auth'
   })
 }
+
+// salt then hash the password
+UserSchema.pre('save', function(next){
+  const user = this;
+  
+  if(user.isModified('password')){
+    bcrypt.genSalt(10, (err, salt)=>{
+      bcrypt.hash(user.password, salt, (err, hash)=>{
+        // replace the user password with hashed password
+        user.password = hash;
+        next();
+      })
+    })
+  } else {
+    next();
+  }
+})
 
 const User = mongoose.model('User', UserSchema);
 
