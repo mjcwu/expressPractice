@@ -114,7 +114,14 @@ app.post('/users', (req, res)=>{
     // .header take two argument, key value pair, key is header name
     // 'x-auth' means custom header, doesn't necessary support by 'header'
     // (key, value)
-    res.header('x-auth', token).send({user});
+
+    // .send({user}) return following
+    // { user:{
+      // "_id": "5c689ff883a5420d7b56cb93",
+      // "email": "georgebush11@gmail.com"
+    //  }
+    // }
+    res.header('x-auth', token).send(user);
   }).catch((e) => {
     res.status(400).send(e);
   })

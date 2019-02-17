@@ -58,7 +58,7 @@ UserSchema.methods.toJSON = function(){
 // .generateAuthToken is customed function
 UserSchema.methods.generateAuthToken = function (){
   // 'this', store individual document 
-  // create hashing
+  // create hashing for token
   const user = this;
   const access = 'auth';
   const token = jwt.sign({_id: user._id.toHexString(), access}, 'abc123').toString();
@@ -112,6 +112,7 @@ UserSchema.pre('save', function(next){
   }
 })
 
+// pass UserSchema as the second argument
 const User = mongoose.model('User', UserSchema);
 
 module.exports = {User}
