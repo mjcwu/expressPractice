@@ -23,6 +23,7 @@ const hashedPassword = "";
 
 // compared password to hashed password and res (response)
 //  if it's true or not
+// bcrypt only support callback, not promises
 bcrypt.compare(password, hashedPassword, (err, res)=>{
   console.log(res)
 })
