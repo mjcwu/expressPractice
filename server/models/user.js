@@ -37,6 +37,15 @@ const UserSchema = new mongoose.Schema( {
   }]
 });
 
+// ----- static vs methods ------
+
+// Methods defined on "statics" are methods that end up on the model. This would enable things like User.getUserById or Product.findByStoreId.
+
+// Methods defined on "methods" are methods that end up on a model instance. This would let you call the methods on an individual instance. Some examples might be something like userOne.generateAuthToken or myProduct.calculateInventory.
+
+// I use "statics" when I'm not referring to a particular instance of a model. I use "methods" when I am working with a specific instance.
+
+// ----- static vs methods ------
 
 
 // JSON.stringify() defers to a customized toJSON() if it exists
@@ -71,6 +80,22 @@ UserSchema.methods.generateAuthToken = function (){
     return token;
   });
 }
+
+UserSchema.methods.removeToken = function(token){
+  const user = this;
+
+  return user.update({
+    // $pull from mogdb operator
+    // remove the item from the array that meets certain quateria
+    $pull: {
+      tokens: {
+        // token: token
+        token
+      }
+    }
+  })
+}
+
 
 UserSchema.statics.findByToken = function (token) {
   // model method with this binding 

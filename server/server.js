@@ -134,7 +134,7 @@ app.get('/users/me', authenticate, (req, res)=>{
   res.send(req.user)
 })
 
-
+// user login and assign token
 app.post('/users/login', (req, res)=>{
   const body = _.pick(req.body, ['email', 'password']);
   
@@ -147,6 +147,16 @@ app.post('/users/login', (req, res)=>{
   });
 })
 
+// DELETE remove token from token array
+app.delete('/users/me/token', authenticate, (req, res)=>{
+  req.user.removeToken(req.token).then(()=>{
+    res.status(200).send();
+  }, ()=>{
+    res.status(400).send()
+  })
+});
+
+// port
 app.listen(port, () => {
   console.log(`Started up at port ${port}`);
 });
