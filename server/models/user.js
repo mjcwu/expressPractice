@@ -73,6 +73,7 @@ UserSchema.methods.generateAuthToken = function (){
   const token = jwt.sign({_id: user._id.toHexString(), access}, 'abc123').toString();
 
   // store it
+  // token is concat as a result, it's an array of tokens stored
   user.tokens = user.tokens.concat([{access, token}]);
 
   // save it
